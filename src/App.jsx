@@ -403,10 +403,11 @@ export function App() {
           <div className="space-y-6 animate-in fade-in duration-200 min-w-0">
             {/* Top Grid: D-Day Countdown & Today's Target Card */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              {/* Feature 1: D-Day Exam Countdown */}
+              {/* Feature 1: D-Day Exam Countdown / Interview-Ready Launch */}
               <DDayCountdown
                 durationMonths={durationMonths}
                 targetTitle={currentTarget.title}
+                targetCategory={currentTarget.category}
                 targetDate={targetDate}
                 onUpdateTargetDate={setTargetDate}
               />

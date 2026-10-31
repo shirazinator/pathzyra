@@ -1,13 +1,42 @@
 import React, { useState, useMemo } from 'react';
-import { Calendar, Clock, AlertCircle, Sparkles, Edit2, Check } from 'lucide-react';
+import { Calendar, Clock, Rocket, Edit2, Check, Briefcase, GraduationCap } from 'lucide-react';
 
 export function DDayCountdown({
   durationMonths = 6,
-  targetTitle = 'Target Exam',
+  targetTitle = 'Target Goal',
+  targetCategory = 'tech',
   targetDate,
   onUpdateTargetDate
 }) {
   const [isEditing, setIsEditing] = useState(false);
+
+  // Determine if target is a competitive exam or a job role
+  const isCompetitiveExam = targetCategory === 'govt' || targetCategory === 'grad_mba';
+
+  // Dynamic context-aware terminology
+  const config = useMemo(() => {
+    if (isCompetitiveExam) {
+      return {
+        badgeTitle: '⏳ Exam D-Day Countdown',
+        pillLabel: 'Exam Countdown',
+        dateLabel: 'Target Exam Date',
+        editPrompt: 'Set Exact Exam Date',
+        description: 'Days left until the official examination hall.',
+        subtext: 'Every mock test & revision cycle counts',
+        icon: <GraduationCap className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+      };
+    } else {
+      return {
+        badgeTitle: '🚀 Interview-Ready Launch Target',
+        pillLabel: 'Hiring Runway',
+        dateLabel: 'Target Application Launch Date',
+        editPrompt: 'Set Target Interview Date',
+        description: 'Days until you start referrals & technical interviews.',
+        subtext: 'Target date to finish projects & DSA problem sets',
+        icon: <Rocket className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+      };
+    }
+  }, [isCompetitiveExam]);
 
   // Compute default target date based on duration in months if not explicitly set
   const computedTargetDate = useMemo(() => {
@@ -46,20 +75,24 @@ export function DDayCountdown({
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-sm min-w-0 transition-colors">
       <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 flex items-center justify-center shrink-0">
-            <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+          <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0">
+            {config.icon}
           </div>
           <div>
             <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                ⏳ Exam D-Day Countdown
+                {config.badgeTitle}
               </span>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/20">
-                Daily Urgency
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+                isCompetitiveExam
+                  ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-800 dark:text-amber-300 border-amber-200 dark:border-amber-500/20'
+                  : 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-300 border-emerald-200 dark:border-emerald-500/20'
+              }`}>
+                {config.pillLabel}
               </span>
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Target: <strong className="text-slate-700 dark:text-slate-200">{targetTitle}</strong>
+              {config.description}
             </p>
           </div>
         </div>
@@ -70,7 +103,7 @@ export function DDayCountdown({
           className="text-[11px] font-medium text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1 cursor-pointer transition p-1"
         >
           <Edit2 className="w-3 h-3" />
-          <span>{isEditing ? 'Cancel' : 'Set Exact Exam Date'}</span>
+          <span>{isEditing ? 'Cancel' : config.editPrompt}</span>
         </button>
       </div>
 
@@ -97,11 +130,15 @@ export function DDayCountdown({
       {/* Countdown Visual Numbers */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
         <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-2.5 text-center">
-          <div className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400 font-mono">
+          <div className={`text-2xl sm:text-3xl font-black font-mono ${
+            isCompetitiveExam
+              ? 'text-amber-600 dark:text-amber-400'
+              : 'text-emerald-600 dark:text-emerald-400'
+          }`}>
             {daysRemaining}
           </div>
           <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5">
-            Days Left
+            Days Runway
           </div>
         </div>
 
@@ -110,18 +147,20 @@ export function DDayCountdown({
             {weeksRemaining}
           </div>
           <div className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5">
-            Weeks Runway
+            Weeks Remaining
           </div>
         </div>
 
         <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-2.5 text-center col-span-2 sm:col-span-2 flex flex-col justify-center text-left px-3.5">
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Target Exam Date:</div>
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+            {config.dateLabel}:
+          </div>
           <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
             {computedTargetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </div>
           <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5 flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>Every 2-hour study block counts</span>
+            <span>{config.subtext}</span>
           </div>
         </div>
       </div>
