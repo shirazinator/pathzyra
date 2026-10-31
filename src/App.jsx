@@ -313,9 +313,9 @@ export function App() {
             </div>
           )}
 
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight break-words">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight break-words hero-3d-text select-none">
             Land The Job & Crack The Exam <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300 bg-clip-text text-transparent">
+            <span className="hero-3d-highlight mt-1">
               With Zero Guesswork
             </span>
           </h1>
