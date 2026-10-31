@@ -129,7 +129,9 @@ const STUDY_PODS = [
   }
 ];
 
-export function PeerLounge({ currentTargetTitle = '' }) {
+export function PeerLounge({ isOpen, onClose, currentTargetTitle = '' }) {
+  if (!isOpen) return null;
+
   const [activeTab, setActiveTab] = useState('qa'); // 'qa' | 'playbooks' | 'pods'
   const [filterCategory, setFilterCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -244,50 +246,76 @@ export function PeerLounge({ currentTargetTitle = '' }) {
   });
 
   return (
-    <div className="space-y-6 text-left min-w-0">
-      {/* Hero Community Header */}
-      <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/20 shadow-sm space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-xs font-bold border border-emerald-300 dark:border-emerald-500/30">
-              <Users className="w-3.5 h-3.5" />
-              <span>Peer & Senior Guidance Lounge • Designed by Shiraz</span>
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl my-auto max-h-[92vh] flex flex-col min-w-0">
+        {/* Sticky Modal Top Bar with Close Button */}
+        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4 shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
+              <Users className="w-4 h-4" />
             </div>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Aspirants & Seniors Learning Together
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-              Have doubts or feel stuck? Ask questions to seniors who have cracked FAANG, Cyber Security, UPSC & CAT. 
-              Zero gatekeeping, 100% honest, actionable road-tested advice.
-            </p>
+            <div className="min-w-0">
+              <h3 className="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white truncate">
+                Peer Guidance & Senior Lounge
+              </h3>
+              <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold truncate">
+                Designed by Shiraz
+              </p>
+            </div>
           </div>
 
           <button
-            onClick={() => setShowAskModal(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm transition cursor-pointer shadow-md shadow-emerald-600/20 active:scale-95 shrink-0"
+            onClick={onClose}
+            className="p-1.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold transition cursor-pointer"
           >
-            <MessageSquare className="w-4 h-4" />
-            <span>Ask a Senior</span>
+            ✕ Close
           </button>
         </div>
 
-        {/* Live Metrics Strip */}
-        <div className="flex items-center gap-4 pt-2 text-[11px] text-slate-500 dark:text-slate-400 border-t border-emerald-500/15 flex-wrap">
-          <span className="flex items-center gap-1">
-            <Flame className="w-3.5 h-3.5 text-amber-500" />
-            <strong>1,480+</strong> Active Aspirants
-          </span>
-          <span>•</span>
-          <span className="flex items-center gap-1">
-            <UserCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <strong>62</strong> Verified Senior Mentors
-          </span>
-          <span>•</span>
-          <span className="text-emerald-700 dark:text-emerald-300 font-semibold">
-            100% Free Peer Support
-          </span>
-        </div>
-      </div>
+        {/* Modal Scrollable Body */}
+        <div className="flex-1 overflow-y-auto pr-1 space-y-5">
+          {/* Hero Community Header */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent border border-emerald-500/20 space-y-2.5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 text-[11px] font-bold border border-emerald-300 dark:border-emerald-500/30">
+                  <Sparkles className="w-3 h-3" />
+                  <span>Aspirants & Seniors Mentorship</span>
+                </div>
+                <h2 className="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  Connect with Seniors & Study Peers
+                </h2>
+                <p className="text-xs text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
+                  Ask questions to seniors who have cracked FAANG, Cyber Security, UPSC & CAT. Zero gatekeeping, 100% honest advice.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowAskModal(true)}
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition cursor-pointer shadow-md shadow-emerald-600/20 active:scale-95 shrink-0"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Ask a Senior</span>
+              </button>
+            </div>
+
+            {/* Live Metrics Strip */}
+            <div className="flex items-center gap-3 pt-1.5 text-[11px] text-slate-500 dark:text-slate-400 border-t border-emerald-500/15 flex-wrap">
+              <span className="flex items-center gap-1">
+                <Flame className="w-3 h-3 text-amber-500" />
+                <strong>1,480+</strong> Active Aspirants
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                <UserCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                <strong>62</strong> Verified Mentors
+              </span>
+              <span>•</span>
+              <span className="text-emerald-700 dark:text-emerald-300 font-semibold">
+                100% Free
+              </span>
+            </div>
+          </div>
 
       {/* Main Navigation Tabs */}
       <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 overflow-x-auto scrollbar-none">
@@ -678,6 +706,8 @@ export function PeerLounge({ currentTargetTitle = '' }) {
           </div>
         </div>
       )}
+        </div>
+      </div>
     </div>
   );
 }

@@ -96,6 +96,7 @@ export function App() {
   });
   const [isRecalibrateOpen, setIsRecalibrateOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isPeerLoungeOpen, setIsPeerLoungeOpen] = useState(false);
   const [showResetTooltip, setShowResetTooltip] = useState(false);
 
   // Sync theme with document class and localStorage
@@ -291,8 +292,7 @@ export function App() {
         onToggleTheme={toggleTheme}
         onRecalibrateClick={() => setIsRecalibrateOpen(true)}
         onEditProfileClick={() => setActiveView(activeView === 'configure' ? 'roadmap' : 'configure')}
-        onOpenCommunity={() => setActiveView('community')}
-        activeView={activeView}
+        onOpenCommunity={() => setIsPeerLoungeOpen(true)}
         hasActivePlan={!!roadmap}
       />
 
@@ -324,11 +324,11 @@ export function App() {
             No generic 10-hour timetables. Choose your target (Tech, SSC, CAT, UPSC, Banking, PM), set your real-life daily hours, and receive an honest feasibility verdict with 100% free curated resources.
           </p>
 
-          {/* View Mode Toggle Switch */}
-          <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2 max-w-full overflow-x-auto scrollbar-none">
+          {/* View Mode Toggle Switch (Clean 2 buttons that NEVER overflow on mobile!) */}
+          <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2 max-w-full">
             <button
               onClick={() => setActiveView('roadmap')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3.5 sm:px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'roadmap'
                   ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -340,7 +340,7 @@ export function App() {
 
             <button
               onClick={() => setActiveView('configure')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3.5 sm:px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'configure'
                   ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -349,21 +349,6 @@ export function App() {
               <SlidersHorizontal className="w-3.5 h-3.5 shrink-0" />
               <span className="hidden sm:inline">Change Target & Hours</span>
               <span className="sm:hidden">Target & Hours</span>
-            </button>
-
-            <button
-              onClick={() => setActiveView('community')}
-              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-                activeView === 'community'
-                  ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <Users className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
-              <span>Peer Lounge</span>
-              <span className="px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 ml-0.5">
-                New
-              </span>
             </button>
           </div>
         </div>
@@ -439,10 +424,6 @@ export function App() {
               </button>
             </div>
           </div>
-        ) : activeView === 'community' ? (
-          <div className="animate-in fade-in duration-200 min-w-0">
-            <PeerLounge currentTargetTitle={currentTarget.title} />
-          </div>
         ) : (
           /* View 2: Active Roadmap Mode */
           <div className="space-y-6 animate-in fade-in duration-200 min-w-0">
@@ -487,6 +468,7 @@ export function App() {
               onToggleTask={handleToggleTask}
               onOpenExport={() => setIsExportOpen(true)}
               onOpenRecalibrate={() => setIsRecalibrateOpen(true)}
+              onOpenCommunity={() => setIsPeerLoungeOpen(true)}
             />
 
             {/* Reset Progress Action with Explanation Tooltip */}
@@ -532,6 +514,13 @@ export function App() {
         onClose={() => setIsExportOpen(false)}
         roadmap={roadmap}
         completedTasks={completedTasks}
+      />
+
+      {/* Peer Guidance & Senior Lounge Modal */}
+      <PeerLounge
+        isOpen={isPeerLoungeOpen}
+        onClose={() => setIsPeerLoungeOpen(false)}
+        currentTargetTitle={currentTarget.title}
       />
 
       {/* Footer with Shiraz attribution */}

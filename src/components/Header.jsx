@@ -82,19 +82,15 @@ export function Header({
                 )}
               </div>
 
-              {/* Peer Lounge Button */}
+              {/* Peer Lounge Button (Desktop & Tablet) */}
               <button
                 onClick={onOpenCommunity}
-                className={`flex items-center gap-1 px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-xl border text-xs font-semibold transition cursor-pointer active:scale-95 whitespace-nowrap ${
-                  activeView === 'community'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-600/20'
-                    : 'bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300'
-                }`}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 dark:bg-amber-500/10 dark:hover:bg-amber-500/20 border border-amber-200 dark:border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-semibold transition cursor-pointer active:scale-95 whitespace-nowrap"
                 title="Connect with Peers & Seniors"
                 aria-label="Peer Lounge"
               >
-                <Users className="w-3.5 h-3.5 shrink-0" />
-                <span className="hidden sm:inline">Peer Lounge</span>
+                <Users className="w-3.5 h-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
+                <span>Peer Lounge</span>
               </button>
 
               {/* Configure Target & Hours Button (Icon on mobile, labeled on desktop) */}
