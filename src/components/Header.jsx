@@ -15,7 +15,7 @@ export function Header({
   const progressPercent = totalTasksCount > 0 ? Math.round((completedTasksCount / totalTasksCount) * 100) : 0;
 
   return (
-    <header className="border-b border-slate-200/80 dark:border-white/[0.08] bg-white/85 dark:bg-[#050507]/85 backdrop-blur-xl sticky top-0 z-40 transition-colors duration-200 w-full">
+    <header className="border-b border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-40 transition-colors duration-200 w-full">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2">
         {/* Brand & Designer Attribution (Stacked cleanly so it NEVER collides on mobile) */}
         <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">

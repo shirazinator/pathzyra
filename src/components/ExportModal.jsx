@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Copy, Check, Download, FileText } from 'lucide-react';
+import { Copy, Check, Download, FileText, FileDown } from 'lucide-react';
+import { downloadRoadmapPDF } from '../utils/pdfExport';
 
 export function ExportModal({
   isOpen,
@@ -98,13 +99,26 @@ export function ExportModal({
 
         {/* Actions */}
         <div className="flex items-center justify-between gap-2.5 pt-2 flex-wrap">
-          <button
-            onClick={handleDownload}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-zinc-200 text-xs font-semibold cursor-pointer transition shadow-sm"
-          >
-            <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            Download .md
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                downloadRoadmapPDF(roadmap, completedTasks);
+                onClose();
+              }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer transition shadow-md shadow-emerald-600/20 active:scale-95"
+            >
+              <FileDown className="w-4 h-4" />
+              Download PDF
+            </button>
+
+            <button
+              onClick={handleDownload}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-zinc-200 text-xs font-semibold cursor-pointer transition shadow-sm"
+            >
+              <Download className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              Download .md
+            </button>
+          </div>
 
           <div className="flex items-center gap-2">
             <button
@@ -115,7 +129,7 @@ export function ExportModal({
             </button>
             <button
               onClick={handleCopy}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer transition shadow-md"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-xs font-bold cursor-pointer transition shadow-sm"
             >
               {copied ? (
                 <>

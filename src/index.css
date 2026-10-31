@@ -18,26 +18,11 @@
     color: #0f172a;
   }
 
-  /* Vercel-Grade Luxury Obsidian Dark Mode */
+  /* Dark mode */
   .dark body, html.dark body {
-    background-color: #050507;
-    color: #f4f4f5;
+    background-color: #0b1120;
+    color: #f1f5f9;
   }
-}
-
-/* Vercel Ambient Glow & Subtle Borders */
-.vercel-glow {
-  background: radial-gradient(circle 500px at 50% -10%, rgba(16, 185, 129, 0.12), transparent 80%);
-}
-
-.dark .vercel-card {
-  background: rgba(18, 18, 23, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-}
-
-.dark .vercel-card:hover {
-  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Custom scrollbar */

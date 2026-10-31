@@ -11,22 +11,25 @@ import {
   Sparkles, 
   Check, 
   ChevronRight, 
+  ChevronDown,
+  ChevronUp,
   X,
   Zap,
   ArrowRight,
-  Compass
+  Layers,
+  SlidersHorizontal
 } from 'lucide-react';
 
 const POPULAR_QUICK_SEARCHES = [
   'Cyber Security',
   'Software Engineer',
   'Data Science & AI',
+  'Data Analytics',
   'UPSC CSE',
   'CAT MBA',
   'DevOps & Cloud',
   'SSC CGL',
-  'Mobile App Dev',
-  'Product Management'
+  'Mobile App Dev'
 ];
 
 export function TargetSelector({
@@ -41,6 +44,11 @@ export function TargetSelector({
   const [customTitle, setCustomTitle] = useState('');
   const [customCategory, setCustomCategory] = useState('tech');
   const [customBenchmarkHours, setCustomBenchmarkHours] = useState(400);
+
+  // If user already has a plan selected, collapse the 13-card catalog by default so they don't have to scroll!
+  const [isCatalogExpanded, setIsCatalogExpanded] = useState(() => {
+    return !selectedTargetId && !customGoal;
+  });
 
   const getCategoryIcon = (catId) => {
     switch (catId) {
@@ -67,18 +75,29 @@ export function TargetSelector({
     return matchesCategory && matchesSearch;
   });
 
+  // Current active target object
+  const activeRole = customGoal && customGoal.id === selectedTargetId
+    ? customGoal
+    : TARGET_ROLES.find((r) => r.id === selectedTargetId) || TARGET_ROLES[0];
+
+  const handleSelect = (id) => {
+    onSelectTarget(id);
+    setIsCatalogExpanded(false); // Collapse to avoid huge scroll!
+  };
+
   const handleInstantGenerate = (queryText) => {
     const text = (queryText || searchQuery).trim();
     if (!text) return;
     const dynamicTarget = generateDynamicTargetFromQuery(text);
     onSetCustomGoal(dynamicTarget);
+    setIsCatalogExpanded(false); // Collapse to avoid huge scroll!
   };
 
   const handleCreateCustom = (e) => {
     e.preventDefault();
     if (!customTitle.trim()) return;
 
-    // Use dynamic generator for rich phases or custom fallback
+    // Deeply adapts to data analytics, data science, hacker, tech, govt, or any custom role
     const dynamicPlan = generateDynamicTargetFromQuery(customTitle.trim());
     const customRole = {
       ...dynamicPlan,
@@ -95,231 +114,292 @@ export function TargetSelector({
 
     onSetCustomGoal(customRole);
     setShowCustomModal(false);
+    setIsCatalogExpanded(false); // Collapse to keep page compact!
   };
 
   return (
-    <div className="space-y-4">
-      {/* Search and Category Filter Bar */}
-      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-        {/* Search Input with Clear Button */}
-        <div className="relative flex-1 min-w-0">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Search ANY exam, role, or skill (e.g. Cyber Security, SDE, UPSC, Rust, CAT)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl pl-10 pr-9 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-zinc-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 shadow-sm transition"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
-              title="Clear search"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
+    <div className="space-y-3.5">
+      {/* Active Selected Goal Compact Summary Card (Zero Scrolling Needed!) */}
+      {activeRole && (
+        <div className="p-4 sm:p-4.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-emerald-500/80 shadow-md transition-all text-left">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 flex items-center gap-1">
+                  <Check className="w-3 h-3 stroke-[3]" />
+                  Active Selected Goal
+                </span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 font-medium capitalize">
+                  {activeRole.category === 'grad_mba' ? 'MBA / Entrance' : activeRole.category}
+                </span>
+                <span className="text-[11px] text-slate-400">•</span>
+                <span className="text-xs text-slate-600 dark:text-slate-300 font-semibold">
+                  ~{activeRole.minHours?.beginner || 400} hrs benchmark
+                </span>
+              </div>
 
-        {/* Custom Role Trigger Button */}
-        <button
-          onClick={() => setShowCustomModal(true)}
-          className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-zinc-200 text-xs sm:text-sm font-medium transition cursor-pointer shrink-0 shadow-sm"
-        >
-          <PlusCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-          <span>Add Custom Target</span>
-        </button>
-      </div>
+              <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white truncate">
+                {activeRole.title}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+                {activeRole.description}
+              </p>
+            </div>
 
-      {/* Quick Search Chips */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]">
-        <span className="text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap pl-0.5">Quick jump:</span>
-        {POPULAR_QUICK_SEARCHES.map((chip) => (
-          <button
-            key={chip}
-            onClick={() => {
-              setSearchQuery(chip);
-              setActiveCategory('all');
-            }}
-            className={`px-2.5 py-1 rounded-full whitespace-nowrap border transition cursor-pointer ${
-              cleanQuery === chip.toLowerCase()
-                ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-semibold'
-                : 'bg-slate-100/70 dark:bg-slate-800/60 border-slate-200/60 dark:border-slate-700/60 text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-750'
-            }`}
-          >
-            {chip}
-          </button>
-        ))}
-      </div>
+            {/* Quick Action Buttons */}
+            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+              <button
+                onClick={() => setIsCatalogExpanded(!isCatalogExpanded)}
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-zinc-200 text-xs font-semibold transition cursor-pointer"
+              >
+                <span>{isCatalogExpanded ? 'Hide Targets' : 'Change Target'}</span>
+                {isCatalogExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </button>
 
-      {/* Category Filter Pills */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none">
-        <button
-          onClick={() => setActiveCategory('all')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-            activeCategory === 'all'
-              ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
-              : 'bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 shadow-sm'
-          }`}
-        >
-          All Targets ({TARGET_ROLES.length})
-        </button>
-
-        {TARGET_CATEGORIES.map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
-              activeCategory === cat.id
-                ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
-                : 'bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 shadow-sm'
-            }`}
-          >
-            {getCategoryIcon(cat.id)}
-            <span>{cat.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Dynamic Universal Generator Alert / Card when searching */}
-      {cleanQuery && filteredRoles.length === 0 && (
-        <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-transparent border border-emerald-500/30 text-left space-y-3">
-          <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold text-sm">
-            <Zap className="w-4 h-4 fill-emerald-500 text-emerald-500" />
-            <span>Universal AI Roadmap Generator</span>
+              <button
+                onClick={() => setShowCustomModal(true)}
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold transition cursor-pointer"
+                title="Create custom target"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Add Custom</span>
+              </button>
+            </div>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-            No pre-packaged syllabus found matching <strong className="text-emerald-600 dark:text-emerald-400 font-semibold">"{searchQuery}"</strong>. 
-            Pathzyra's engine can dynamically synthesize a full 4-phase calibrated blueprint with free resources, weekly goals, and honest time estimates right now.
-          </p>
-          <button
-            onClick={() => handleInstantGenerate(searchQuery)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20 cursor-pointer"
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Generate Roadmap for "{searchQuery}"</span>
-            <ArrowRight className="w-3.5 h-3.5 ml-1" />
-          </button>
         </div>
       )}
 
-      {/* Role Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-        {/* Active Custom / Dynamic goal card if created */}
-        {customGoal && (
-          <div
-            onClick={() => onSelectTarget(customGoal.id)}
-            className={`p-4 rounded-2xl border transition-all text-left relative cursor-pointer min-w-0 shadow-sm ${
-              selectedTargetId === customGoal.id
-                ? 'bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-500 ring-2 ring-emerald-500/30'
-                : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 border-slate-200 dark:border-slate-800'
-            }`}
-          >
-            <div className="flex items-start justify-between gap-2 mb-2">
-              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">
-                ✨ {customGoal.badge || 'Dynamic Goal'}
-              </span>
-              {selectedTargetId === customGoal.id && (
-                <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center">
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
-                </div>
+      {/* Expandable Catalog / Search Bar (Only shown when browsing or expanding) */}
+      {isCatalogExpanded && (
+        <div className="space-y-3.5 pt-1 animate-in fade-in duration-200">
+          {/* Search Input and Custom Trigger */}
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+            <div className="relative flex-1 min-w-0">
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search ANY role, exam, or skill (e.g. Cyber Security, Data Analytics, Hacker, UPSC)..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+                className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl pl-10 pr-9 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-zinc-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 shadow-sm transition"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition"
+                  title="Clear search"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
               )}
             </div>
-            <h4 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base mb-1 truncate">{customGoal.title}</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-3 leading-relaxed">{customGoal.description}</p>
-            <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2.5">
-              <span>Benchmark: <strong className="text-slate-800 dark:text-slate-200">~{customGoal.minHours?.beginner || 400} hrs</strong></span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Active Selection</span>
-            </div>
-          </div>
-        )}
 
-        {/* Dynamic Generator Prompt Card (when search query exists and filtered roles also exist) */}
-        {cleanQuery && filteredRoles.length > 0 && (
-          <div
-            onClick={() => handleInstantGenerate(searchQuery)}
-            className="p-4 rounded-2xl border border-dashed border-emerald-500/40 hover:border-emerald-500 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.08] hover:bg-emerald-500/10 transition text-left cursor-pointer flex flex-col justify-between group"
-          >
-            <div>
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30">
-                  ✨ Dynamic AI Blueprint
-                </span>
-                <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              </div>
-              <h4 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base mb-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                Synthesize "{searchQuery}"
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-3">
-                Build a tailored 4-phase curriculum specifically calibrated for "{searchQuery}" with free resources.
-              </p>
-            </div>
-            <div className="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 border-t border-emerald-500/20 pt-2.5 gap-1">
-              <span>Generate in 1-Click</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-            </div>
+            <button
+              onClick={() => setShowCustomModal(true)}
+              className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-zinc-200 text-xs sm:text-sm font-medium transition cursor-pointer shrink-0 shadow-sm"
+            >
+              <PlusCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Add Custom Target</span>
+            </button>
           </div>
-        )}
 
-        {/* Preset Roles */}
-        {filteredRoles.map((role) => {
-          const isSelected = selectedTargetId === role.id;
-          return (
-            <div
-              key={role.id}
-              onClick={() => onSelectTarget(role.id)}
-              className={`p-4 rounded-2xl border transition-all text-left relative cursor-pointer group flex flex-col justify-between min-w-0 shadow-sm ${
-                isSelected
-                  ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-500 shadow-md ring-2 ring-emerald-500/20'
-                  : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 border-slate-200 dark:border-slate-800'
+          {/* Quick Jump Topic Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-[11px]">
+            <span className="text-slate-400 dark:text-slate-500 font-medium whitespace-nowrap pl-0.5">Quick jump:</span>
+            {POPULAR_QUICK_SEARCHES.map((chip) => (
+              <button
+                key={chip}
+                onClick={() => {
+                  setSearchQuery(chip);
+                  setActiveCategory('all');
+                }}
+                className={`px-2.5 py-1 rounded-full whitespace-nowrap border transition cursor-pointer ${
+                  cleanQuery === chip.toLowerCase()
+                    ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-semibold'
+                    : 'bg-slate-100 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/80 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                {chip}
+              </button>
+            ))}
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+            <button
+              onClick={() => setActiveCategory('all')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+                activeCategory === 'all'
+                  ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                  : 'bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 shadow-sm'
               }`}
             >
-              <div className="min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-2 flex-wrap">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    {getCategoryIcon(role.category)}
-                    <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 capitalize truncate">
-                      {role.category === 'grad_mba' ? 'MBA / GATE' : role.category}
-                    </span>
-                  </div>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold whitespace-nowrap ${
-                    role.badge === 'High Demand' ? 'bg-emerald-100 dark:bg-emerald-500/10 text-emerald-800 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20' :
-                    role.badge === 'Huge Aspirants' ? 'bg-teal-100 dark:bg-teal-500/10 text-teal-800 dark:text-teal-300 border border-teal-200 dark:border-teal-500/20' :
-                    role.badge === 'Prestigious' ? 'bg-amber-100 dark:bg-amber-500/10 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20' :
-                    'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
-                  }`}>
-                    {role.badge}
-                  </span>
-                </div>
+              All Targets ({TARGET_ROLES.length})
+            </button>
 
-                <h4 className="font-bold text-slate-900 dark:text-white text-sm sm:text-base mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors break-words">
-                  {role.title}
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4 line-clamp-3">
-                  {role.description}
-                </p>
-              </div>
+            {TARGET_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
+                  activeCategory === cat.id
+                    ? 'bg-emerald-600 text-white font-bold shadow-md shadow-emerald-600/20'
+                    : 'bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 shadow-sm'
+                }`}
+              >
+                {getCategoryIcon(cat.id)}
+                <span>{cat.label}</span>
+              </button>
+            ))}
+          </div>
 
-              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-3 gap-2 flex-wrap">
-                <div>
-                  Benchmark: <strong className="text-slate-800 dark:text-slate-200">{role.minHours.beginner} hrs</strong>
-                  <span className="text-slate-400 ml-1">({role.defaultMonths}m)</span>
-                </div>
-                {isSelected ? (
-                  <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold whitespace-nowrap">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" /> Selected
-                  </span>
-                ) : (
-                  <span className="text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 flex items-center transition whitespace-nowrap">
-                    Select <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-                  </span>
-                )}
+          {/* Dynamic AI Roadmap Card if unlisted search */}
+          {cleanQuery && filteredRoles.length === 0 && (
+            <div className="p-4.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-left space-y-2.5">
+              <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm">
+                <Zap className="w-4 h-4 fill-emerald-500 text-emerald-500 shrink-0" />
+                <span>Universal AI Roadmap Generator</span>
               </div>
+              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                No preset found for <strong className="text-emerald-600 dark:text-emerald-400 font-bold">"{searchQuery}"</strong>. 
+                Pathzyra can adapt and dynamically synthesize a 4-phase calibrated blueprint with free resources, weekly goals, and honest time estimates right now.
+              </p>
+              <button
+                onClick={() => handleInstantGenerate(searchQuery)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20 cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Generate Roadmap for "{searchQuery}"</span>
+                <ArrowRight className="w-3.5 h-3.5 ml-0.5" />
+              </button>
             </div>
-          );
-        })}
-      </div>
+          )}
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {/* Custom goal card if created */}
+            {customGoal && (
+              <div
+                onClick={() => handleSelect(customGoal.id)}
+                className={`p-3.5 rounded-2xl border transition-all text-left relative cursor-pointer min-w-0 shadow-sm ${
+                  selectedTargetId === customGoal.id
+                    ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-500 ring-2 ring-emerald-500/20'
+                    : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 border-slate-200 dark:border-slate-800'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-2 mb-1.5">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/30">
+                    ✨ Custom Goal
+                  </span>
+                  {selectedTargetId === customGoal.id && (
+                    <div className="w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center">
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </div>
+                  )}
+                </div>
+                <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1 truncate">{customGoal.title}</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-2 leading-relaxed">{customGoal.description}</p>
+                <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2">
+                  <span>Benchmark: <strong className="text-slate-800 dark:text-slate-200">~{customGoal.minHours?.beginner || 400} hrs</strong></span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Click to Apply</span>
+                </div>
+              </div>
+            )}
+
+            {/* Quick Generator card when searching */}
+            {cleanQuery && filteredRoles.length > 0 && (
+              <div
+                onClick={() => handleInstantGenerate(searchQuery)}
+                className="p-3.5 rounded-2xl border border-dashed border-emerald-500/40 hover:border-emerald-500 bg-emerald-500/[0.04] dark:bg-emerald-500/[0.08] hover:bg-emerald-500/10 transition text-left cursor-pointer flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300">
+                      ✨ Dynamic Synthesizer
+                    </span>
+                    <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    Build Custom "{searchQuery}"
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-2">
+                    Click to generate a tailored 4-phase curriculum specifically for "{searchQuery}".
+                  </p>
+                </div>
+                <div className="flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 border-t border-emerald-500/20 pt-2 gap-1">
+                  <span>Generate in 1-Click</span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            )}
+
+            {/* Preset Roles */}
+            {filteredRoles.map((role) => {
+              const isSelected = selectedTargetId === role.id;
+              return (
+                <div
+                  key={role.id}
+                  onClick={() => handleSelect(role.id)}
+                  className={`p-3.5 rounded-2xl border transition-all text-left relative cursor-pointer group flex flex-col justify-between min-w-0 shadow-sm ${
+                    isSelected
+                      ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-500 shadow-md ring-2 ring-emerald-500/20'
+                      : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 border-slate-200 dark:border-slate-800'
+                  }`}
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-start justify-between gap-2 mb-1.5 flex-wrap">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        {getCategoryIcon(role.category)}
+                        <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 capitalize truncate">
+                          {role.category === 'grad_mba' ? 'MBA / GATE' : role.category}
+                        </span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                        {role.badge}
+                      </span>
+                    </div>
+
+                    <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors break-words">
+                      {role.title}
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-3 line-clamp-2">
+                      {role.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2.5 gap-2">
+                    <div>
+                      Benchmark: <strong className="text-slate-800 dark:text-slate-200">{role.minHours.beginner} hrs</strong>
+                      <span className="text-slate-400 ml-1">({role.defaultMonths}m)</span>
+                    </div>
+                    {isSelected ? (
+                      <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-bold">
+                        <Check className="w-3.5 h-3.5 stroke-[3]" /> Selected
+                      </span>
+                    ) : (
+                      <span className="text-slate-400 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 flex items-center transition">
+                        Select <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Done Browsing / Collapse Button */}
+          <div className="text-center pt-1">
+            <button
+              onClick={() => setIsCatalogExpanded(false)}
+              className="text-xs font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 cursor-pointer inline-flex items-center gap-1"
+            >
+              <span>Done picking target — Collapse list</span>
+              <ChevronUp className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Custom Target Modal */}
       {showCustomModal && (
@@ -338,6 +418,10 @@ export function TargetSelector({
               </button>
             </div>
 
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Type any role or exam (e.g. <strong>Data Analytics</strong>, <strong>Data Scientist</strong>, <strong>Ethical Hacker</strong>, <strong>Rust</strong>). Pathzyra will automatically adapt the 4-phase curriculum and attach real, curated free resources!
+            </p>
+
             <form onSubmit={handleCreateCustom} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
@@ -346,7 +430,7 @@ export function TargetSelector({
                 <input
                   type="text"
                   required
-                  placeholder="e.g. RBI Grade B, Embedded Rust Engineer, State PSC, NDA"
+                  placeholder="e.g. Data Analytics, Data Scientist, Ethical Hacker, RBI Grade B"
                   value={customTitle}
                   onChange={(e) => setCustomTitle(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
