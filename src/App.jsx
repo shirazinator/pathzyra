@@ -12,13 +12,15 @@ import { DDayCountdown } from './components/DDayCountdown';
 import { TodayTargetCard } from './components/TodayTargetCard';
 import { RecalibrateModal } from './components/RecalibrateModal';
 import { ExportModal } from './components/ExportModal';
+import { PeerLounge } from './components/PeerLounge';
 import { 
   Sparkles, 
   Calendar, 
   SlidersHorizontal,
   ChevronRight,
   RotateCcw,
-  HelpCircle
+  HelpCircle,
+  Users
 } from 'lucide-react';
 
 export function App() {
@@ -289,6 +291,8 @@ export function App() {
         onToggleTheme={toggleTheme}
         onRecalibrateClick={() => setIsRecalibrateOpen(true)}
         onEditProfileClick={() => setActiveView(activeView === 'configure' ? 'roadmap' : 'configure')}
+        onOpenCommunity={() => setActiveView('community')}
+        activeView={activeView}
         hasActivePlan={!!roadmap}
       />
 
@@ -321,10 +325,10 @@ export function App() {
           </p>
 
           {/* View Mode Toggle Switch */}
-          <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2 max-w-full">
+          <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2 max-w-full overflow-x-auto scrollbar-none">
             <button
               onClick={() => setActiveView('roadmap')}
-              className={`px-3 sm:px-5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'roadmap'
                   ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -336,7 +340,7 @@ export function App() {
 
             <button
               onClick={() => setActiveView('configure')}
-              className={`px-3 sm:px-5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'configure'
                   ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -344,7 +348,22 @@ export function App() {
             >
               <SlidersHorizontal className="w-3.5 h-3.5 shrink-0" />
               <span className="hidden sm:inline">Change Target & Hours</span>
-              <span className="sm:hidden">Change Target</span>
+              <span className="sm:hidden">Target & Hours</span>
+            </button>
+
+            <button
+              onClick={() => setActiveView('community')}
+              className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                activeView === 'community'
+                  ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Users className="w-3.5 h-3.5 shrink-0 text-emerald-500" />
+              <span>Peer Lounge</span>
+              <span className="px-1.5 py-0.2 rounded text-[9px] font-extrabold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 ml-0.5">
+                New
+              </span>
             </button>
           </div>
         </div>
@@ -419,6 +438,10 @@ export function App() {
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
+          </div>
+        ) : activeView === 'community' ? (
+          <div className="animate-in fade-in duration-200 min-w-0">
+            <PeerLounge currentTargetTitle={currentTarget.title} />
           </div>
         ) : (
           /* View 2: Active Roadmap Mode */
