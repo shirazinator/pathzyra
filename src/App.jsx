@@ -92,6 +92,8 @@ export function App() {
     const onboarded = localStorage.getItem('pathzyra_has_onboarded');
     return onboarded === 'true' ? 'roadmap' : 'configure';
   });
+  const [isRecalibrateOpen, setIsRecalibrateOpen] = useState(false);
+  const [isExportOpen, setIsExportOpen] = useState(false);
   const [showResetTooltip, setShowResetTooltip] = useState(false);
 
   // Sync theme with document class and localStorage
