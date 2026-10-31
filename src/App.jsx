@@ -8,6 +8,8 @@ import { ProfileForm } from './components/ProfileForm';
 import { FeasibilityBanner } from './components/FeasibilityBanner';
 import { RoadmapView } from './components/RoadmapView';
 import { DailyTracker } from './components/DailyTracker';
+import { DDayCountdown } from './components/DDayCountdown';
+import { TodayTargetCard } from './components/TodayTargetCard';
 import { RecalibrateModal } from './components/RecalibrateModal';
 import { ExportModal } from './components/ExportModal';
 import { 
@@ -37,6 +39,10 @@ export function App() {
 
   const [durationMonths, setDurationMonths] = useState(() => {
     return Number(localStorage.getItem('pathzyra_duration_months')) || 6;
+  });
+
+  const [targetDate, setTargetDate] = useState(() => {
+    return localStorage.getItem('pathzyra_target_date') || '';
   });
 
   const [isWorkingProfessional, setIsWorkingProfessional] = useState(() => {
@@ -111,6 +117,12 @@ export function App() {
   useEffect(() => {
     localStorage.setItem('pathzyra_duration_months', durationMonths.toString());
   }, [durationMonths]);
+
+  useEffect(() => {
+    if (targetDate) {
+      localStorage.setItem('pathzyra_target_date', targetDate);
+    }
+  }, [targetDate]);
 
   useEffect(() => {
     localStorage.setItem('pathzyra_is_working', JSON.stringify(isWorkingProfessional));
@@ -204,6 +216,7 @@ export function App() {
     const target = TARGET_ROLES.find((r) => r.id === id);
     if (target && target.defaultMonths) {
       setDurationMonths(target.defaultMonths);
+      setTargetDate(''); // recalculate default date
     }
   };
 
@@ -211,6 +224,7 @@ export function App() {
     setCustomGoal(customRole);
     setSelectedTargetId(customRole.id);
     setDurationMonths(customRole.defaultMonths || 6);
+    setTargetDate('');
   };
 
   const handleToggleTask = (taskId) => {
@@ -222,6 +236,7 @@ export function App() {
 
   const handleApplyRecommendedMonths = (healthyMonths) => {
     setDurationMonths(healthyMonths);
+    setTargetDate('');
     setActiveView('roadmap');
   };
 
@@ -386,6 +401,24 @@ export function App() {
         ) : (
           /* View 2: Active Roadmap Mode */
           <div className="space-y-6 animate-in fade-in duration-200 min-w-0">
+            {/* Top Grid: D-Day Countdown & Today's Target Card */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Feature 1: D-Day Exam Countdown */}
+              <DDayCountdown
+                durationMonths={durationMonths}
+                targetTitle={currentTarget.title}
+                targetDate={targetDate}
+                onUpdateTargetDate={setTargetDate}
+              />
+
+              {/* Feature 2: Today's Action Target Card */}
+              <TodayTargetCard
+                roadmap={roadmap}
+                completedTasks={completedTasks}
+                onToggleTask={handleToggleTask}
+              />
+            </div>
+
             {/* Daily Habit & Streak Tracker */}
             <DailyTracker
               streak={streak}
