@@ -121,10 +121,10 @@ export function TargetSelector({
     <div className="space-y-3.5">
       {/* Active Selected Goal Compact Summary Card (Zero Scrolling Needed!) */}
       {activeRole && (
-        <div className="p-4 sm:p-4.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-emerald-500/80 shadow-md transition-all text-left">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 mb-1 flex-wrap">
+        <div className="p-3.5 sm:p-4.5 rounded-2xl bg-white dark:bg-slate-900 border-2 border-emerald-500/80 shadow-md transition-all text-left w-full max-w-full min-w-0 overflow-hidden box-border">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full min-w-0">
+            <div className="w-full min-w-0 flex-1 overflow-hidden">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-500/30 flex items-center gap-1">
                   <Check className="w-3 h-3 stroke-[3]" />
                   Active Selected Goal
@@ -138,10 +138,10 @@ export function TargetSelector({
                 </span>
               </div>
 
-              <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white truncate">
+              <h3 className="text-sm sm:text-base md:text-lg font-extrabold text-slate-900 dark:text-white break-words whitespace-normal leading-snug">
                 {activeRole.title}
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 break-words line-clamp-2 mt-1 leading-relaxed">
                 {activeRole.description}
               </p>
             </div>
@@ -298,7 +298,7 @@ export function TargetSelector({
                     </div>
                   )}
                 </div>
-                <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1 truncate">{customGoal.title}</h4>
+                <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-1 break-words">{customGoal.title}</h4>
                 <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mb-2 leading-relaxed">{customGoal.description}</p>
                 <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2">
                   <span>Benchmark: <strong className="text-slate-800 dark:text-slate-200">~{customGoal.minHours?.beginner || 400} hrs</strong></span>
