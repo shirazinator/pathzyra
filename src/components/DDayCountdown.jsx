@@ -151,16 +151,20 @@ export function DDayCountdown({
           </div>
         </div>
 
-        <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-2.5 text-center col-span-2 sm:col-span-2 flex flex-col justify-center text-left px-3.5">
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+        <div className="bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 col-span-2 sm:col-span-2 flex flex-col items-center justify-center text-center">
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
             {config.dateLabel}:
           </div>
-          <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+          <div className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white mt-0.5 truncate max-w-full">
             {computedTargetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
           </div>
-          <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
-            <span>{config.subtext}</span>
+          <div className={`mt-1.5 inline-flex items-center justify-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[10px] font-semibold max-w-full ${
+            isCompetitiveExam
+              ? 'bg-amber-100/70 dark:bg-amber-500/10 border-amber-200/80 dark:border-amber-500/20 text-amber-800 dark:text-amber-300'
+              : 'bg-emerald-100/70 dark:bg-emerald-500/10 border-emerald-200/80 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isCompetitiveExam ? 'bg-amber-500' : 'bg-emerald-500'}`}></span>
+            <span className="truncate">{config.subtext}</span>
           </div>
         </div>
       </div>
