@@ -96,18 +96,20 @@ export function RoadmapView({
           {/* Help / What is this guide button */}
           <button
             onClick={() => setShowGuide(!showGuide)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium cursor-pointer transition shadow-sm"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-xs font-medium cursor-pointer transition shadow-sm"
           >
             <HelpCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-            <span>{showGuide ? 'Hide Guide' : 'What are these sections?'}</span>
+            <span className="hidden sm:inline">{showGuide ? 'Hide Guide' : 'What are these sections?'}</span>
+            <span className="sm:hidden">{showGuide ? 'Hide' : 'Guide'}</span>
           </button>
 
           <button
             onClick={onOpenExport}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold cursor-pointer transition shadow-sm"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-semibold cursor-pointer transition shadow-sm"
           >
             <Download className="w-3.5 h-3.5 shrink-0" />
-            <span>Export Notion / MD</span>
+            <span className="hidden sm:inline">Export Notion / MD</span>
+            <span className="sm:hidden">Export</span>
           </button>
 
           <button
@@ -157,7 +159,7 @@ export function RoadmapView({
       )}
 
       {/* Phase Selection Tabs */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 w-full">
         {roadmap.phases.map((phase, idx) => {
           const isSelected = activePhaseIndex === idx;
           const prog = getPhaseProgress(phase);
@@ -166,7 +168,7 @@ export function RoadmapView({
             <button
               key={phase.phaseId}
               onClick={() => setActivePhaseIndex(idx)}
-              className={`p-3 rounded-2xl border text-left transition cursor-pointer flex flex-col justify-between min-w-0 shadow-sm ${
+              className={`p-2.5 sm:p-3 rounded-2xl border text-left transition cursor-pointer flex flex-col justify-between min-w-0 overflow-hidden shadow-sm ${
                 isSelected
                   ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-500 ring-2 ring-emerald-500/20'
                   : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'

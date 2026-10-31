@@ -270,7 +270,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0b1120] text-slate-900 dark:text-zinc-100 flex flex-col font-['Plus_Jakarta_Sans',sans-serif] transition-colors duration-200">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-slate-50 dark:bg-[#0b1120] text-slate-900 dark:text-zinc-100 flex flex-col font-['Plus_Jakarta_Sans',sans-serif] transition-colors duration-200">
       {/* Global Navigation Header with Light/Dark Switch */}
       <Header
         streak={streak}
@@ -304,29 +304,30 @@ export function App() {
           </p>
 
           {/* View Mode Toggle Switch */}
-          <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2">
+          <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2 max-w-full">
             <button
               onClick={() => setActiveView('roadmap')}
-              className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3 sm:px-5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'roadmap'
                   ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <Calendar className="w-4 h-4 shrink-0" />
+              <Calendar className="w-3.5 h-3.5 shrink-0" />
               <span>Execution Roadmap</span>
             </button>
 
             <button
               onClick={() => setActiveView('configure')}
-              className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              className={`px-3 sm:px-5 py-2 rounded-xl text-[11px] sm:text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'configure'
                   ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              <SlidersHorizontal className="w-4 h-4 shrink-0" />
-              <span>Change Target & Hours</span>
+              <SlidersHorizontal className="w-3.5 h-3.5 shrink-0" />
+              <span className="hidden sm:inline">Change Target & Hours</span>
+              <span className="sm:hidden">Change Target</span>
             </button>
           </div>
         </div>

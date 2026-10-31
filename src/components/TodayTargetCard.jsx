@@ -41,7 +41,7 @@ export function TodayTargetCard({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-sm min-w-0 transition-colors">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-sm min-w-0 w-full max-w-full overflow-hidden transition-colors">
       <div className="flex items-start justify-between gap-3 mb-3 flex-wrap">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 flex items-center justify-center shrink-0">
@@ -85,12 +85,12 @@ export function TodayTargetCard({
       ) : (
         <div className="space-y-2.5">
           {/* Active Target Banner */}
-          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <div>
-              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">
+          <div className="bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 min-w-0">
+            <div className="min-w-0 break-words">
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200 break-words">
                 Current Focus: <span className="text-emerald-700 dark:text-emerald-400">{activeWeek.focus}</span>
               </div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                 {pendingTasks.length} task{pendingTasks.length > 1 ? 's' : ''} remaining in Week {activeWeek.weekNumber}
               </div>
             </div>
