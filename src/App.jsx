@@ -71,8 +71,12 @@ export function App() {
     return saved ? JSON.parse(saved) : {};
   });
 
+  const [hasOnboarded, setHasOnboarded] = useState(() => {
+    return localStorage.getItem('pathzyra_has_onboarded') === 'true';
+  });
+
   const [streak, setStreak] = useState(() => {
-    return Number(localStorage.getItem('pathzyra_streak')) || 1;
+    return Number(localStorage.getItem('pathzyra_streak')) || 0;
   });
 
   const [totalHoursStudied, setTotalHoursStudied] = useState(() => {
@@ -83,10 +87,11 @@ export function App() {
     return localStorage.getItem('pathzyra_last_study_date') || '';
   });
 
-  // UI Modals & Navigation
-  const [isRecalibrateOpen, setIsRecalibrateOpen] = useState(false);
-  const [isExportOpen, setIsExportOpen] = useState(false);
-  const [activeView, setActiveView] = useState('roadmap'); // 'roadmap' | 'configure'
+  // UI Modals & Navigation: New users start on 'configure' so they choose their own goal!
+  const [activeView, setActiveView] = useState(() => {
+    const onboarded = localStorage.getItem('pathzyra_has_onboarded');
+    return onboarded === 'true' ? 'roadmap' : 'configure';
+  });
   const [showResetTooltip, setShowResetTooltip] = useState(false);
 
   // Sync theme with document class and localStorage
@@ -237,6 +242,8 @@ export function App() {
   const handleApplyRecommendedMonths = (healthyMonths) => {
     setDurationMonths(healthyMonths);
     setTargetDate('');
+    localStorage.setItem('pathzyra_has_onboarded', 'true');
+    setHasOnboarded(true);
     setActiveView('roadmap');
   };
 
@@ -291,6 +298,14 @@ export function App() {
             <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span className="truncate">The Honest Feasibility Engine • 80/20 Pareto Focus</span>
           </div>
+
+          {!hasOnboarded && (
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-amber-800 dark:text-amber-300 text-xs font-bold shadow-sm">
+                <span>👉 Step 1: Select what you are preparing for below</span>
+              </div>
+            </div>
+          )}
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight break-words">
             Land The Job & Crack The Exam <br className="hidden sm:block" />
@@ -391,10 +406,14 @@ export function App() {
             {/* Generate & View Roadmap Button */}
             <div className="text-center pt-2">
               <button
-                onClick={() => setActiveView('roadmap')}
+                onClick={() => {
+                  localStorage.setItem('pathzyra_has_onboarded', 'true');
+                  setHasOnboarded(true);
+                  setActiveView('roadmap');
+                }}
                 className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm transition cursor-pointer shadow-lg shadow-emerald-600/25 active:scale-95"
               >
-                <span>View My Personalized Roadmap</span>
+                <span>Generate & View My Roadmap</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
