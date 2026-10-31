@@ -12,6 +12,7 @@ export const TARGET_ROLES = [
     category: 'tech',
     title: 'Software Engineer (SDE-1 / Product & FAANG)',
     badge: 'High Demand',
+    keywords: ['sde', 'software engineer', 'faang', 'backend', 'java', 'cpp', 'c++', 'python', 'dsa', 'leetcode', 'algorithms', 'coding', 'web development'],
     description: 'Data Structures & Algorithms, System Design basics, Core CS (OS, DBMS, CN), and scalable full-stack projects.',
     minHours: { beginner: 500, intermediate: 280, advanced: 140 },
     defaultMonths: 6,
@@ -66,6 +67,7 @@ export const TARGET_ROLES = [
     category: 'tech',
     title: 'Data Scientist & AI / ML Engineer',
     badge: 'Trending',
+    keywords: ['data science', 'ai', 'artificial intelligence', 'ml', 'machine learning', 'deep learning', 'nlp', 'llm', 'python', 'genai', 'generative ai', 'pytorch', 'prompt engineering'],
     description: 'Python, Mathematics (Linear Algebra, Calculus, Stats), Classical ML, Deep Learning & LLM prompt engineering.',
     minHours: { beginner: 520, intermediate: 300, advanced: 160 },
     defaultMonths: 6,
@@ -114,6 +116,7 @@ export const TARGET_ROLES = [
     category: 'tech',
     title: 'Modern Frontend Engineer (React / Next.js)',
     badge: 'Popular',
+    keywords: ['frontend', 'react', 'nextjs', 'javascript', 'typescript', 'web developer', 'html', 'css', 'tailwind', 'ui'],
     description: 'HTML5/CSS3 semantics, Deep JavaScript (ES6+, Event Loop), React architecture, Next.js, and web performance.',
     minHours: { beginner: 380, intermediate: 200, advanced: 100 },
     defaultMonths: 4,
@@ -161,6 +164,7 @@ export const TARGET_ROLES = [
     category: 'tech',
     title: 'DevOps & Cloud Infrastructure Engineer',
     badge: 'High Salary',
+    keywords: ['devops', 'cloud', 'aws', 'docker', 'kubernetes', 'k8s', 'terraform', 'ci cd', 'linux', 'site reliability', 'sre', 'sysadmin'],
     description: 'Linux internals, Bash, Docker containers, Kubernetes orchestration, CI/CD pipelines, AWS, and Terraform.',
     minHours: { beginner: 440, intermediate: 250, advanced: 120 },
     defaultMonths: 5,
@@ -202,6 +206,101 @@ export const TARGET_ROLES = [
       }
     ]
   },
+  {
+    id: 'cyber_security',
+    category: 'tech',
+    title: 'Cybersecurity Analyst & Ethical Hacker (PenTester / SOC)',
+    badge: 'High Demand',
+    keywords: ['cyber', 'security', 'cybersecurity', 'ethical hacking', 'hacker', 'pentest', 'soc', 'infosec', 'network security', 'owasp', 'bug bounty'],
+    description: 'Network Security (TCP/IP, Wireshark), Linux CLI, Web Pentesting (OWASP Top 10), Privilege Escalation, SIEM (Splunk/Wazuh), and hands-on CTF labs.',
+    minHours: { beginner: 480, intermediate: 270, advanced: 130 },
+    defaultMonths: 6,
+    phases: [
+      {
+        phaseName: 'Phase 1: Networking Foundations, Linux & Security Scripting',
+        focus: 'OSI Model, TCP/IP, Subnetting, Wireshark packet capture, Linux CLI administration, Bash & Python scripting for security tasks',
+        weight: 'Tier 1 (Non-negotiable Bedrock)',
+        resources: [
+          { name: 'OverTheWire: Bandit (Free Linux Wargame)', type: 'Interactive CTF Lab', url: 'https://overthewire.org/wargames/bandit/', free: true, note: 'Hands-on gamified Linux command line mastery' },
+          { name: "Professor Messer's CompTIA Security+ Training", type: 'Video Course', url: 'https://www.professormesser.com/security-plus/sy0-701/sy0-701-video/sy0-701-training-course/', free: true, note: 'Gold-standard free video series for cybersecurity foundations' },
+          { name: 'NetworkChuck - Networking for Hackers', type: 'YouTube Series', url: 'https://www.youtube.com/@NetworkChuck', free: true, note: 'Visual, high-retention breakdown of networking protocols & Wireshark' }
+        ]
+      },
+      {
+        phaseName: 'Phase 2: Web Application Security & OWASP Top 10 Pentesting',
+        focus: 'Reconnaissance (Nmap, Gobuster), OWASP Top 10 (SQL Injection, XSS, CSRF, SSRF, IDOR), Burp Suite Proxy, and vulnerability assessment',
+        weight: 'Tier 1 (Core Interview Weightage)',
+        resources: [
+          { name: 'PortSwigger Web Security Academy', type: 'Interactive Labs & Theory', url: 'https://portswigger.net/web-security', free: true, note: 'Free interactive labs by creators of Burp Suite (industry gold standard)' },
+          { name: 'TryHackMe: Free Pre-Security & Complete Beginner Paths', type: 'Hands-on Browser Labs', url: 'https://tryhackme.com/', free: true, note: 'Gamified virtual machines teaching web & system hacking' },
+          { name: 'OWASP Top 10 Official Documentation & Cheatsheets', type: 'Reference Standard', url: 'https://owasp.org/www-project-top-ten/', free: true, note: 'Authoritative vulnerability classifications and remediations' }
+        ]
+      },
+      {
+        phaseName: 'Phase 3: System Penetration, Privilege Escalation & Active Directory',
+        focus: 'Windows & Linux privilege escalation (LinPEAS, WinPEAS), Metasploit, Active Directory basics, Hash cracking (Hashcat/John the Ripper)',
+        weight: 'Tier 2 (High-Value Technical Skill)',
+        resources: [
+          { name: 'Hack The Box - Starting Point (Tier 0 & 1 Free)', type: 'CTF Machines', url: 'https://www.hackthebox.com/hacker/starting-point', free: true, note: 'Guided real-world vulnerable machines with writeups' },
+          { name: 'TCM Security - Practical Ethical Hacking Free Modules', type: 'YouTube Course', url: 'https://www.youtube.com/@TheCyberMentor', free: true, note: 'Ethical hacking methodologies and real penetration testing demos' }
+        ]
+      },
+      {
+        phaseName: 'Phase 4: SOC Operations, SIEM (Splunk), Incident Response & Mocks',
+        focus: 'SIEM log analysis (Splunk/Wazuh), Incident Response cycle (NIST framework), Threat Intelligence, Blue Team defense, and technical mock interviews',
+        weight: 'Tier 1 (Job Offer Round)',
+        resources: [
+          { name: 'Splunk Free Training & Search Tutorial', type: 'Official Free Labs', url: 'https://www.splunk.com/en_us/training/free-courses/overview.html', free: true, note: 'Learn log ingestion, SPL queries, and alert dashboard creation' },
+          { name: 'LetsDefend - Blue Team SOC Analyst Simulator', type: 'Interactive SOC Platform', url: 'https://letsdefend.io/', free: true, note: 'Free simulated SOC analyst alerts and investigation playbooks' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'mobile_dev',
+    category: 'tech',
+    title: 'Mobile App Developer (Flutter & React Native / iOS & Android)',
+    badge: 'High Demand',
+    keywords: ['mobile', 'flutter', 'react native', 'android', 'ios', 'dart', 'app developer', 'mobile app'],
+    description: 'Cross-platform mobile apps with Flutter or React Native, native device APIs, state management, offline storage, and Play Store / App Store publishing.',
+    minHours: { beginner: 420, intermediate: 230, advanced: 110 },
+    defaultMonths: 5,
+    phases: [
+      {
+        phaseName: 'Phase 1: Language Syntax & Mobile UI Components',
+        focus: 'Dart syntax / TypeScript fundamentals, Widget tree / JSX layout, Flexbox, Navigation, Responsive layouts',
+        weight: 'Tier 1 (Core)',
+        resources: [
+          { name: 'Flutter Official Codelabs & Learn', type: 'Interactive Guides', url: 'https://docs.flutter.dev/get-started/codelab', free: true, note: 'Step by step official Flutter starter apps' },
+          { name: 'React Native Official Docs & Tutorial', type: 'Official Guide', url: 'https://reactnative.dev/docs/getting-started', free: true, note: 'Setting up Expo and fundamental components' }
+        ]
+      },
+      {
+        phaseName: 'Phase 2: State Management & REST/GraphQL API Integration',
+        focus: 'Bloc / Riverpod or Redux / Zustand, Async networking, JWT authentication, caching network responses',
+        weight: 'Tier 1 (Everyday Architecture)',
+        resources: [
+          { name: 'Vandad Nahavandipoor - Free Flutter Masterclasses', type: 'YouTube Series', url: 'https://www.youtube.com/@freecodecamp', free: true, note: 'Comprehensive state management and architectural patterns' }
+        ]
+      },
+      {
+        phaseName: 'Phase 3: Native Device Capabilities & Offline Persistence',
+        focus: 'SQLite/Hive/MMKV local database, Push notifications, Camera & Geolocation APIs, Background jobs',
+        weight: 'Tier 2 (Real-world App Ready)',
+        resources: [
+          { name: 'Firebase for Mobile Quickstarts', type: 'Documentation', url: 'https://firebase.google.com/docs', free: true, note: 'Auth, Firestore, Cloud Messaging, and Crashlytics' }
+        ]
+      },
+      {
+        phaseName: 'Phase 4: App Store Deployment, Performance & Mock Interviews',
+        focus: 'Code signing, Play Store / App Store release checklist, profiling app frame rate, 2 polished publishable apps',
+        weight: 'Tier 1 (Hiring Proof)',
+        resources: [
+          { name: 'Fastlane Automation Docs', type: 'CI/CD Guide', url: 'https://docs.fastlane.tools/', free: true, note: 'Automate beta deployment and screenshots' }
+        ]
+      }
+    ]
+  },
 
   // --- GOVERNMENT & CIVIL SERVICES (INDIA) ---
   {
@@ -209,6 +308,7 @@ export const TARGET_ROLES = [
     category: 'govt',
     title: 'SSC CGL (Tier 1 & Tier 2 / ASO, Inspector, CAG)',
     badge: 'Huge Aspirants',
+    keywords: ['ssc', 'cgl', 'chsl', 'govt', 'government', 'cag', 'aso', 'inspector', 'ssc cgl', 'sarkari'],
     description: 'Quantitative Aptitude, General Intelligence & Reasoning, English Comprehension, General Awareness, and Computer Module.',
     minHours: { beginner: 650, intermediate: 350, advanced: 180 },
     defaultMonths: 8,
@@ -262,6 +362,7 @@ export const TARGET_ROLES = [
     category: 'govt',
     title: 'Banking Exams (IBPS PO, SBI PO, RRB & Clerk)',
     badge: 'Speed & Accuracy',
+    keywords: ['banking', 'bank', 'sbi', 'sbi po', 'ibps', 'ibps po', 'rbi', 'clerk', 'bank exam', 'rrb', 'financial'],
     description: 'Speed Math, High-level DI, Complex Puzzles & Seating Arrangements, Reading Comprehension, Banking & Financial Awareness.',
     minHours: { beginner: 500, intermediate: 260, advanced: 130 },
     defaultMonths: 6,
@@ -309,6 +410,7 @@ export const TARGET_ROLES = [
     category: 'govt',
     title: 'UPSC Civil Services (IAS / IPS / IFS)',
     badge: 'Prestigious',
+    keywords: ['upsc', 'ias', 'ips', 'ifs', 'civil services', 'cse', 'prelims', 'mains', 'sarkari'],
     description: 'General Studies 1-4, CSAT, Essay, Optional Subject, and Daily Current Affairs with Analytical Answer Writing.',
     minHours: { beginner: 1200, intermediate: 700, advanced: 350 },
     defaultMonths: 12,
@@ -356,6 +458,7 @@ export const TARGET_ROLES = [
     category: 'grad_mba',
     title: 'CAT (IIMs & Top Business Schools)',
     badge: 'High ROI',
+    keywords: ['cat', 'mba', 'iim', 'entrance', 'xat', 'snap', 'business school', 'management'],
     description: 'VARC (Reading Comprehension & Critical Reasoning), DILR (Data Interpretation & Logical Puzzles), and QA (Quantitative Aptitude).',
     minHours: { beginner: 450, intermediate: 250, advanced: 120 },
     defaultMonths: 6,
@@ -406,6 +509,7 @@ export const TARGET_ROLES = [
     category: 'grad_mba',
     title: 'GATE Computer Science & IT (IITs & PSUs)',
     badge: 'Technical Depth',
+    keywords: ['gate', 'gate cs', 'iit', 'psu', 'mtech', 'computer science gate', 'engineering entrance'],
     description: 'Discrete Maths, Engineering Maths, Algorithms, OS, DBMS, Computer Networks, Theory of Computation, and Compiler Design.',
     minHours: { beginner: 550, intermediate: 300, advanced: 150 },
     defaultMonths: 7,
@@ -453,6 +557,7 @@ export const TARGET_ROLES = [
     category: 'non_tech',
     title: 'Product Management (APM / PM in Tech)',
     badge: 'High Impact',
+    keywords: ['product manager', 'pm', 'apm', 'product management', 'agile', 'scrum', 'tech pm'],
     description: 'Product Sense, Product Design, Metrics & Analytics, Technical Fundamentals, Execution, and Case Interviews.',
     minHours: { beginner: 350, intermediate: 180, advanced: 90 },
     defaultMonths: 4,
@@ -498,6 +603,7 @@ export const TARGET_ROLES = [
     category: 'non_tech',
     title: 'Data Analyst & Business Intelligence Specialist',
     badge: 'Quick Transition',
+    keywords: ['data analyst', 'bi', 'business intelligence', 'sql', 'power bi', 'tableau', 'excel', 'analytics', 'data analysis'],
     description: 'Advanced Excel/Sheets, SQL queries, Tableau/PowerBI dashboards, Python for EDA, and business problem solving.',
     minHours: { beginner: 320, intermediate: 160, advanced: 80 },
     defaultMonths: 3.5,
