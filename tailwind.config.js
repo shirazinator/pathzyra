@@ -8,16 +8,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Deep obsidian background shades
-        surface: {
-          950: '#090a0c',
-          900: '#111317',
-          850: '#171a1f',
-          800: '#1e2229',
-          700: '#2c323c',
-          600: '#3d4553',
-        },
-        // Fresh Emerald / Mint primary theme (not blue!)
         brand: {
           50: '#ecfdf5',
           100: '#d1fae5',
@@ -29,13 +19,6 @@ export default {
           700: '#047857',
           800: '#065f46',
           900: '#064e3b',
-          950: '#022c22',
-        },
-        // Warm Champagne / Amber for milestones
-        gold: {
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
         }
       }
     },

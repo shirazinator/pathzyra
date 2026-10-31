@@ -16,11 +16,15 @@ import {
   SlidersHorizontal,
   ChevronRight,
   RotateCcw,
-  Compass,
-  CheckCircle2
+  HelpCircle
 } from 'lucide-react';
 
 export function App() {
+  // Theme state: 'light' or 'dark'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('pathzyra_theme') || 'light';
+  });
+
   // Load saved state from localStorage
   const [selectedTargetId, setSelectedTargetId] = useState(() => {
     return localStorage.getItem('pathzyra_target_id') || 'sde_faang';
@@ -77,6 +81,21 @@ export function App() {
   const [isRecalibrateOpen, setIsRecalibrateOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [activeView, setActiveView] = useState('roadmap'); // 'roadmap' | 'configure'
+  const [showResetTooltip, setShowResetTooltip] = useState(false);
+
+  // Sync theme with document class and localStorage
+  useEffect(() => {
+    localStorage.setItem('pathzyra_theme', theme);
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   // Persist settings
   useEffect(() => {
@@ -219,7 +238,7 @@ export function App() {
     if (strategy === 'extend_weeks') {
       setDurationMonths((prev) => Math.min(18, prev + 0.5));
     } else if (strategy === 'trim_backlog') {
-      // Backlog trim: drop Tier 2 and proceed immediately
+      // Backlog trim: keep moving forward without accumulating guilt
     } else if (strategy === 'buffer_spread') {
       if (isWorkingProfessional) {
         setWeekdayHours((prev) => Math.min(4, Math.round((prev + 0.5) * 10) / 10));
@@ -230,18 +249,20 @@ export function App() {
   };
 
   const handleResetProgress = () => {
-    if (window.confirm('Reset completed tasks for this roadmap?')) {
+    if (window.confirm('Clear all task checkmarks to start a fresh study or revision cycle? Your logged study hours will be preserved.')) {
       setCompletedTasks({});
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#090a0c] text-zinc-100 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
-      {/* Global Navigation Header */}
+    <div className="min-h-screen bg-slate-50 dark:bg-[#0b1120] text-slate-900 dark:text-zinc-100 flex flex-col font-['Plus_Jakarta_Sans',sans-serif] transition-colors duration-200">
+      {/* Global Navigation Header with Light/Dark Switch */}
       <Header
         streak={streak}
         completedTasksCount={completedTasksCount}
         totalTasksCount={totalTasksCount}
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onRecalibrateClick={() => setIsRecalibrateOpen(true)}
         onEditProfileClick={() => setActiveView(activeView === 'configure' ? 'roadmap' : 'configure')}
         hasActivePlan={!!roadmap}
@@ -251,30 +272,30 @@ export function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8 min-w-0">
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto space-y-3 min-w-0">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5 text-brand-400 shrink-0" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs font-semibold shadow-sm">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span className="truncate">The Honest Feasibility Engine • 80/20 Pareto Focus</span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight break-words">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight break-words">
             Land The Job & Crack The Exam <br className="hidden sm:block" />
-            <span className="bg-gradient-to-r from-brand-400 via-emerald-300 to-amber-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-amber-500 dark:from-emerald-400 dark:via-teal-300 dark:to-amber-300 bg-clip-text text-transparent">
               With Zero Guesswork
             </span>
           </h1>
 
-          <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-2xl mx-auto break-words">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-2xl mx-auto break-words">
             No generic 10-hour timetables. Choose your target (Tech, SSC, CAT, UPSC, Banking, PM), set your real-life daily hours, and receive an honest feasibility verdict with 100% free curated resources.
           </p>
 
           {/* View Mode Toggle Switch */}
-          <div className="inline-flex p-1 rounded-2xl bg-surface-900 border border-surface-800 shadow-inner mt-2">
+          <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm mt-2">
             <button
               onClick={() => setActiveView('roadmap')}
               className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'roadmap'
-                  ? 'bg-brand-500 text-surface-950 font-black shadow-md shadow-brand-500/25'
-                  : 'text-zinc-400 hover:text-white'
+                  ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <Calendar className="w-4 h-4 shrink-0" />
@@ -285,8 +306,8 @@ export function App() {
               onClick={() => setActiveView('configure')}
               className={`px-4 sm:px-5 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
                 activeView === 'configure'
-                  ? 'bg-brand-500 text-surface-950 font-black shadow-md shadow-brand-500/25'
-                  : 'text-zinc-400 hover:text-white'
+                  ? 'bg-emerald-600 text-white font-extrabold shadow-md shadow-emerald-600/20'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               <SlidersHorizontal className="w-4 h-4 shrink-0" />
@@ -301,11 +322,11 @@ export function App() {
             {/* Step 1: Target Selector */}
             <section className="space-y-3 min-w-0">
               <div>
-                <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-lg bg-brand-500 text-surface-950 font-black flex items-center justify-center text-xs">1</span>
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-lg bg-emerald-600 text-white font-black flex items-center justify-center text-xs">1</span>
                   Select Target Exam or Role
                 </h2>
-                <p className="text-xs text-zinc-400">Choose from pre-calibrated gold standards or create your own custom goal.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Choose from pre-calibrated gold standards or create your own custom goal.</p>
               </div>
 
               <TargetSelector
@@ -319,11 +340,11 @@ export function App() {
             {/* Step 2: Profile & Hours Calibration */}
             <section className="space-y-3 min-w-0">
               <div>
-                <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                  <span className="w-5 h-5 rounded-lg bg-brand-500 text-surface-950 font-black flex items-center justify-center text-xs">2</span>
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="w-5 h-5 rounded-lg bg-emerald-600 text-white font-black flex items-center justify-center text-xs">2</span>
                   Set Your Real Daily Hours & Window
                 </h2>
-                <p className="text-xs text-zinc-400">Account for working hours, college schedules, and weekend availability.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Account for working hours, college schedules, and weekend availability.</p>
               </div>
 
               <ProfileForm
@@ -355,7 +376,7 @@ export function App() {
             <div className="text-center pt-2">
               <button
                 onClick={() => setActiveView('roadmap')}
-                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 rounded-2xl bg-brand-500 hover:bg-brand-400 text-surface-950 font-black text-xs sm:text-sm transition cursor-pointer shadow-xl shadow-brand-500/25 active:scale-95"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm transition cursor-pointer shadow-lg shadow-emerald-600/25 active:scale-95"
               >
                 <span>View My Personalized Roadmap</span>
                 <ChevronRight className="w-4 h-4" />
@@ -389,15 +410,31 @@ export function App() {
               onOpenRecalibrate={() => setIsRecalibrateOpen(true)}
             />
 
-            {/* Reset Progress Action */}
-            <div className="flex justify-center pt-2">
-              <button
-                onClick={handleResetProgress}
-                className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-rose-400 transition cursor-pointer"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset task checkboxes for this plan</span>
-              </button>
+            {/* Reset Progress Action with Explanation Tooltip */}
+            <div className="flex flex-col items-center justify-center pt-3 pb-2 text-center space-y-1">
+              <div className="relative inline-block">
+                <button
+                  onClick={handleResetProgress}
+                  onMouseEnter={() => setShowResetTooltip(true)}
+                  onMouseLeave={() => setShowResetTooltip(false)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition cursor-pointer shadow-sm"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Reset task checkboxes for this plan</span>
+                  <HelpCircle className="w-3 h-3 text-slate-400 ml-0.5" />
+                </button>
+
+                {/* Tooltip explaining what Reset does */}
+                {showResetTooltip && (
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-2.5 bg-slate-900 text-white text-[11px] rounded-xl shadow-xl border border-slate-700 z-50 leading-relaxed animate-in fade-in zoom-in-95 duration-150">
+                    <strong className="text-emerald-400 block mb-0.5">What does this do?</strong>
+                    Unchecks all the weekly task checkmarks if you have finished the syllabus and want to start a second revision round, or if you want a clean slate. Your logged hours and streak remain safe!
+                  </div>
+                )}
+              </div>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                Use this to start Revision Round 2 after finishing all weeks.
+              </p>
             </div>
           </div>
         )}
@@ -419,14 +456,14 @@ export function App() {
       />
 
       {/* Footer with Shiraz attribution */}
-      <footer className="border-t border-surface-800 bg-surface-950 py-6 mt-12 text-center text-xs text-zinc-500">
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 py-6 mt-12 text-center text-xs text-slate-500 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-start">
-            <span className="font-extrabold text-zinc-300">Pathzyra</span>
+            <span className="font-extrabold text-slate-800 dark:text-slate-300">Pathzyra</span>
             <span>—</span>
-            <span className="text-brand-400 font-semibold">Designed by Shiraz</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Designed by Shiraz</span>
           </div>
-          <div className="text-zinc-500 text-[11px]">
+          <div className="text-slate-500 text-[11px]">
             100% free open-access gold standard resources. Zero spam, honest calculations.
           </div>
         </div>
